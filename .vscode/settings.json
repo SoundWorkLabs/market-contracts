@@ -1,0 +1,9 @@
+{
+    "cSpell.words": [
+        "lamports",
+        "soundwork"
+    ],
+    "rust-analyzer.linkedProjects": [
+        "./programs/market-contracts/Cargo.toml"
+    ]
+}
