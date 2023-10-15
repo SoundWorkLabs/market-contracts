@@ -23,10 +23,14 @@ describe("market-contracts", async () => {
 	// ); // ! BROKEN: in the contract. make an admin func to transfer it back 
 
 
-	let nftMint = new anchor.web3.PublicKey(
-		"5sQTE5rmngYJzUBavyLcJadL2GYKftavE4bE96c8ZD44"
-	);
+	// let nftMint = new anchor.web3.PublicKey(
+	// 	"5sQTE5rmngYJzUBavyLcJadL2GYKftavE4bE96c8ZD44"
+	// ); // ! working. control
 
+
+	let nftMint = new anchor.web3.PublicKey(
+		"9Uf4cEXKbWQvBKjEv7dxWACs7pWkfbgPjr5LMp4x7yT7"
+	); // ? LISTED
 
 	const [assetManager] = anchor.web3.PublicKey.findProgramAddressSync(
 		[Buffer.from("soundwork")],
@@ -41,35 +45,32 @@ describe("market-contracts", async () => {
 		nftMint,
 		authority.publicKey
 	); // ? we know it exists
-	// let vaultTokenAccount = getAssociatedTokenAddressSync(nftMint, assetManager, true); // ! check this
-	let [vaultTokenAccount] = anchor.web3.PublicKey.findProgramAddressSync(
-		[assetManager.toBuffer()],
-		program.programId
-	); // ! check this
+	let vaultTokenAccount = getAssociatedTokenAddressSync(nftMint, assetManager, true); // ! check this
 
 	console.log("vault token account    -> ", vaultTokenAccount.toBase58());
 	console.log("asset manager account  -> ", assetManager.toBase58());
 	console.log("listing data account   -> ", listingDataAcc.toBase58());
 
-	it("create listing!", async () => {
-		let tx = await program.methods
-			.listNft(new anchor.BN(100 * anchor.web3.LAMPORTS_PER_SOL))
-			.accounts({
-				authority: authority.publicKey,
-				authorityTokenAccount: userTokenAccount,
-				mint: nftMint,
-				assetManager,
-				vaultTokenAccount,
-				listingData: listingDataAcc,
-				tokenProgram: TOKEN_PROGRAM_ID,
-				systemProgram: anchor.web3.SystemProgram.programId,
-			})
-			.rpc();
+	// it("create listing!", async () => {
+	// 	let tx = await program.methods
+	// 		.listNft(new anchor.BN(100 * anchor.web3.LAMPORTS_PER_SOL))
+	// 		.accounts({
+	// 			authority: authority.publicKey,
+	// 			authorityTokenAccount: userTokenAccount,
+	// 			mint: nftMint,
+	// 			assetManager,
+	// 			vaultTokenAccount,
+	// 			listingData: listingDataAcc,
+	// 			tokenProgram: TOKEN_PROGRAM_ID,
+	// 			associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.rpc();
 
-		console.log(
-			`list tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-		);
-	});
+	// 	console.log(
+	// 		`list tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+	// 	);
+	// });
 
 	// it("edit listing!", async () => {
 	// 	let tx = await program.methods

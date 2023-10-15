@@ -8,7 +8,7 @@ use crate::{
 
 #[derive(Accounts)]
 pub struct DeleteListing<'info> {
-    #[account(mut)]
+    #[account(mut, address = listing_data.owner)]
     pub authority: Signer<'info>,
 
     #[account(
@@ -42,9 +42,6 @@ pub fn delete_listing_handler(ctx: Context<DeleteListing>) -> Result<()> {
     let (_, bump) = Pubkey::find_program_address(&[b"soundwork".as_ref()], ctx.program_id);
     let asset_manager_seeds = &[b"soundwork".as_ref(), &[bump]];
     let asset_manager_signer = &[&asset_manager_seeds[..]];
-
-    // ! remove below
-    msg!("transfer the nft back to user");
 
     transfer_nft(
         ctx.accounts.vault_token_account.to_account_info(),

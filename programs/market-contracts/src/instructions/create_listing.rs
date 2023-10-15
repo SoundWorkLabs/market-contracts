@@ -1,5 +1,8 @@
-use anchor_lang::{prelude::*, solana_program::lamports};
-use anchor_spl::token::{Mint, Token, TokenAccount};
+use anchor_lang::prelude::*;
+use anchor_spl::{
+    associated_token::AssociatedToken,
+    token::{Mint, Token, TokenAccount},
+};
 
 use crate::{
     helpers::{delegate_nft, transfer_nft},
@@ -33,13 +36,20 @@ pub struct CreateListing<'info> {
     )]
     pub asset_manager: Account<'info, AssetManagerV1>,
 
+    // #[account(
+    //     init_if_needed,
+    //     payer = authority,
+    //     seeds = [asset_manager.key().as_ref()],
+    //     bump,
+    //     token::mint = mint,
+    //     token::authority = asset_manager
+    // )]
+    // pub vault_token_account: Account<'info, TokenAccount>, // asset manager token acc that will hold all nfts
     #[account(
         init_if_needed,
         payer = authority,
-        seeds = [asset_manager.key().as_ref()],
-        bump,
-        token::mint = mint,
-        token::authority = asset_manager
+        associated_token::authority = asset_manager,
+        associated_token::mint = mint,
     )]
     pub vault_token_account: Account<'info, TokenAccount>, // asset manager token acc that will hold all nfts
 
@@ -56,6 +66,7 @@ pub struct CreateListing<'info> {
     pub listing_data: Account<'info, ListingDataV1>,
 
     pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>, // ! new
     pub system_program: Program<'info, System>,
 }
 
@@ -69,24 +80,24 @@ pub fn create_listing_handler(ctx: Context<CreateListing>, lamports: u64) -> Res
     let asset_manager_seeds = &[b"soundwork".as_ref(), &[bump]];
     let asset_manager_signer = &[&asset_manager_seeds[..]];
 
-    // // delegate authority to asset manager
-    // delegate_nft(
-    //     ctx.accounts.authority.to_account_info(),
-    //     ctx.accounts.asset_manager.to_account_info(),
-    //     ctx.accounts.authority_token_account.to_account_info(),
-    //     ctx.accounts.mint.clone(),
-    //     ctx.accounts.token_program.clone(),
-    // )?;
+    // delegate authority to asset manager
+    delegate_nft(
+        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.asset_manager.to_account_info(),
+        ctx.accounts.authority_token_account.to_account_info(),
+        ctx.accounts.mint.clone(),
+        ctx.accounts.token_program.clone(),
+    )?;
 
-    // // we transfer the NFT to asset manager
-    // transfer_nft(
-    //     ctx.accounts.authority_token_account.to_account_info(),
-    //     ctx.accounts.vault_token_account.to_account_info(),
-    //     ctx.accounts.mint.clone(),
-    //     ctx.accounts.authority.to_account_info(),
-    //     ctx.accounts.token_program.clone(),
-    //     asset_manager_signer,
-    // )?;
+    // we transfer the NFT to asset manager
+    transfer_nft(
+        ctx.accounts.authority_token_account.to_account_info(),
+        ctx.accounts.vault_token_account.to_account_info(),
+        ctx.accounts.mint.clone(),
+        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.token_program.clone(),
+        asset_manager_signer,
+    )?;
 
     Ok(())
 }
