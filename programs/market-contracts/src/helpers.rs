@@ -1,6 +1,5 @@
 use anchor_lang::{
     prelude::{Account, AccountInfo, CpiContext, Program, Result},
-    // solana_program,
     system_program::{self, System, Transfer as SolanaTransfer},
     ToAccountInfo,
 };
@@ -30,6 +29,7 @@ pub fn delegate_nft<'a>(
     Ok(())
 }
 
+// todo (Jimii) use references for the accounts
 pub fn transfer_nft<'a>(
     from: AccountInfo<'a>,
     to: AccountInfo<'a>,
@@ -56,17 +56,20 @@ pub fn transfer_nft<'a>(
 
 // transfer lamports from on person to another
 pub fn transfer_lamports<'a>(
-    from: AccountInfo<'a>,
-    to: AccountInfo<'a>,
+    from: &AccountInfo<'a>,
+    to: &AccountInfo<'a>,
     system_program: &Program<'a, System>,
-    amount: u64,
+    lamports: u64,
 ) -> Result<()> {
-    let cpi_accounts = SolanaTransfer { from, to };
+    let cpi_accounts = SolanaTransfer {
+        from: from.to_account_info(),
+        to: to.to_account_info(),
+    };
     let cpi_program = system_program.to_account_info();
 
     let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
 
-    system_program::transfer(cpi_context, amount)?;
+    system_program::transfer(cpi_context, lamports)?;
 
     Ok(())
 }

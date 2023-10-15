@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-market_contracts = "HQZV1Ukjs5bJGaZjZoijVyK1HBBqzwsZX9eAwmkvTG4u"
+market_contracts = "EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX"
 
 [registry]
 url = "https://api.apr.dev"
