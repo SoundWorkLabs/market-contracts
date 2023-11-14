@@ -1,8 +1,10 @@
 [features]
 seeds = false
 skip-lint = false
-[programs.localnet]
-market_contracts = "EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX"
+
+[programs.devnet]
+soundwork-bid = "5uPHCfQ6wJWf5efi3W6HK9a6mHeiF33kS6QkdhpEbN81"
+soundwork-list = "EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX"
 
 [registry]
 url = "https://api.apr.dev"
