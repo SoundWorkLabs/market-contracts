@@ -10,7 +10,7 @@ use instructions::*;
 declare_id!("EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX");
 
 #[program]
-pub mod market_contracts {
+pub mod soundwork_list {
 
     use super::*;
 

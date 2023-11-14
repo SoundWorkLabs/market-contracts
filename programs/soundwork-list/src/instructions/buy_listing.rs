@@ -6,6 +6,7 @@ use anchor_spl::token::{ TokenAccount, Mint, Token };
 use crate::{
     state::listing::{ AssetManagerV1, ListingDataV1 },
     helpers::{ transfer_nft, transfer_lamports },
+    error::CustomError,
 };
 
 #[derive(Accounts)]
@@ -13,7 +14,7 @@ pub struct BuyListing<'info> {
     // user buying the NFT
     #[account(
         mut, 
-        constraint = buyer.lamports() > listing_data.lamports
+        constraint = buyer.lamports() > listing_data.lamports @ CustomError::InsufficientFunds
      )]
     pub buyer: Signer<'info>,
 
@@ -50,7 +51,6 @@ pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
     msg!("balance: ref ->  {}", ctx.accounts.buyer.lamports());
     msg!("balance: modifiable -> {:?}", ctx.accounts.buyer.lamports);
 
-
     // ! remove me
     msg!("this is the price set {:?}", ctx.accounts.listing_data.lamports);
     msg!("this is the original owner {:?}", ctx.accounts.listing_data.owner);
@@ -72,7 +72,7 @@ pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
         ctx.accounts.mint.clone(),
         ctx.accounts.asset_manager.to_account_info(),
         ctx.accounts.token_program.clone(),
-        asset_manager_signer,
+        asset_manager_signer
     )?;
 
     // todo (Jimii) protocol fees

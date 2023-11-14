@@ -36,15 +36,6 @@ pub struct CreateListing<'info> {
     )]
     pub asset_manager: Account<'info, AssetManagerV1>,
 
-    // #[account(
-    //     init_if_needed,
-    //     payer = authority,
-    //     seeds = [asset_manager.key().as_ref()],
-    //     bump,
-    //     token::mint = mint,
-    //     token::authority = asset_manager
-    // )]
-    // pub vault_token_account: Account<'info, TokenAccount>, // asset manager token acc that will hold all nfts
     #[account(
         init_if_needed,
         payer = authority,
@@ -101,3 +92,5 @@ pub fn create_listing_handler(ctx: Context<CreateListing>, lamports: u64) -> Res
 
     Ok(())
 }
+
+//

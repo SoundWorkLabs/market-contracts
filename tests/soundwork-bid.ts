@@ -7,16 +7,16 @@ import {
 	TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 
-import { MarketContracts } from "../target/types/market_contracts";
+import { SoundworkList } from "../target/types/soundwork_list";
 
-describe("market-contracts", async () => {
+describe("soundwork-list", async () => {
 	// Configure the client to use the local cluster.
 	anchor.setProvider(anchor.AnchorProvider.env());
 
 	const authority = anchor.AnchorProvider.env().wallet as anchor.Wallet;
 
 	const program = anchor.workspace
-		.MarketContracts as Program<MarketContracts>;
+		.MarketContracts as Program<SoundworkList>;
 
 	// let nftMint = new anchor.web3.PublicKey(
 	// 	"7HnPDNsroSKVzcLq23Ub2uMcGRda9zEUGppj3WYK3Nry"
@@ -87,9 +87,9 @@ describe("market-contracts", async () => {
 	// 		})
 	// 		.rpc();
 
-	// 	console.log(
-	// 		`edit listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-	// 	);
+		// console.log(
+		// 	`edit listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+		// );
 	// });
 
 	// it("delete listing!", async () => {
