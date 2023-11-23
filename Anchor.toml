@@ -3,7 +3,7 @@ seeds = false
 skip-lint = false
 
 [programs.devnet]
-soundwork-bid = "5uPHCfQ6wJWf5efi3W6HK9a6mHeiF33kS6QkdhpEbN81"
+soundwork-bid = "CVuoapcC1RG8y1m86eChkXmynPi4FaykDC8jM8soMZ4j"
 soundwork-list = "EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX"
 
 [registry]
