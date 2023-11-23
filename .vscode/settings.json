@@ -1,9 +1,13 @@
 {
     "cSpell.words": [
+        "bocchi",
+        "Hitori",
+        "Ikuyo",
+        "Jimii",
         "lamports",
         "soundwork"
     ],
     "rust-analyzer.linkedProjects": [
-        "./programs/market-contracts/Cargo.toml"
+        "programs/soundwork-list/Cargo.toml",
     ]
 }

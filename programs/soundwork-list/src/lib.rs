@@ -27,7 +27,7 @@ pub mod soundwork_list {
 
     /// remove listing by closing the `listingData` account
     /// and transfer NFT from soundwork to user
-    pub fn remove_listing(ctx: Context<DeleteListing>) -> Result<()> {
+    pub fn delete_listing(ctx: Context<DeleteListing>) -> Result<()> {
         instructions::delete_listing_handler(ctx)
     }
 
@@ -35,5 +35,15 @@ pub mod soundwork_list {
     /// transfer NFT to user if he has funds to purchase the NFT
     pub fn buy_listing(ctx: Context<BuyListing>) -> Result<()> {
         instructions::buy_listing_handler(ctx)
+    }
+
+    /// transfer lamports to the escrow wallet
+    pub fn deposit_sol(ctx: Context<DepositSol>, lamports: u64) -> Result<()> {
+        instructions::deposit_sol_handler(ctx, lamports)
+    }
+
+    /// withdraw sol from the user escrow
+    pub fn withdraw_sol(ctx: Context<WithdrawSol>, lamports: Option<u64>) -> Result<()> {
+        instructions::withdraw_sol_handler(ctx, lamports)
     }
 }

@@ -15,23 +15,33 @@ pub struct BuyListing<'info> {
     #[account(
         mut, 
         constraint = buyer.lamports() > listing_data.lamports @ CustomError::InsufficientFunds
-     )]
+    )]
     pub buyer: Signer<'info>,
 
+    /// CHECK: program account
+    #[account(
+        mut, 
+        constraint = escrow_wallet_as_buyer.lamports() > listing_data.lamports @ CustomError::InsufficientFunds
+    )]
+    pub escrow_wallet_as_buyer: AccountInfo<'info>,
+
     /// CHECK: address of NFT lister initialized in listing data account
-    #[account(mut, address = listing_data.owner)]
+    #[account(mut, address = listing_data.owner.key())]
     pub og_owner: AccountInfo<'info>,
 
     #[account(mut)]
     pub asset_manager: Account<'info, AssetManagerV1>,
 
     #[account(mut)]
-    pub vault_token_account: Account<'info, TokenAccount>, // asset manager acc that will hold all nfts
+    pub vault_token_account: Account<'info, TokenAccount>, // asset manager ATA that will hold all nfts
 
     #[account(mut)]
-    pub buyer_token_account: Account<'info, TokenAccount>, // asset manager acc that will hold all nfts
+    pub buyer_token_account: Account<'info, TokenAccount>, // buyer ATA
 
-    #[account(mut)]
+    #[account(
+        mut,
+        address = listing_data.mint
+    )]
     pub mint: Account<'info, Mint>,
 
     #[account(mut, close = og_owner)]
@@ -42,26 +52,24 @@ pub struct BuyListing<'info> {
 }
 
 pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
-    // signer seeds
+    // ! derive asset manager seeds
     let (_, bump) = Pubkey::find_program_address(&[b"soundwork".as_ref()], ctx.program_id);
     let asset_manager_seeds = &[b"soundwork".as_ref(), &[bump]];
     let asset_manager_signer = &[&asset_manager_seeds[..]];
 
-    // we check if he has enough lamports to purchase it
-    msg!("balance: ref ->  {}", ctx.accounts.buyer.lamports());
-    msg!("balance: modifiable -> {:?}", ctx.accounts.buyer.lamports);
-
-    // ! remove me
-    msg!("this is the price set {:?}", ctx.accounts.listing_data.lamports);
-    msg!("this is the original owner {:?}", ctx.accounts.listing_data.owner);
-
-    // we transfer some lamports to owner, take protocol fees and also check for
-    transfer_lamports(
-        &ctx.accounts.buyer,
-        &ctx.accounts.og_owner,
-        &ctx.accounts.system_program,
-        ctx.accounts.listing_data.lamports
-    )?;
+    // todo(Jimii): protocol fees
+    // ! check if we want to use the user's escrow wallet as signer 
+    if ctx.accounts.escrow_wallet_as_buyer.owner ==  ctx.program_id {
+        ctx.accounts.escrow_wallet_as_buyer.sub_lamports(ctx.accounts.listing_data.lamports)?;
+        ctx.accounts.og_owner.add_lamports(ctx.accounts.listing_data.lamports)?;
+    } else {
+        transfer_lamports(
+            &ctx.accounts.buyer,
+            &ctx.accounts.og_owner,
+            &ctx.accounts.system_program,
+            ctx.accounts.listing_data.lamports
+        )?;
+    }
 
     // todo (Jimii) royalty enforcement
 
