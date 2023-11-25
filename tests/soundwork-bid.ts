@@ -59,7 +59,8 @@ describe("SOUNDWORK BID", async () => {
 	// 		.acceptBid()
 	// 		.accounts({
 	// 			seller: signerOneKp.publicKey,
-	// 			listingData: listingDataAcc,
+	// biddingDataAcc,
+	// 			listingDataAcc,
 	// 			buyer: signerTwoKp.publicKey,
 	// 			mint: nftMint,
 	// 			// biddingWallet: findBiddingWallet(signerTwoKp.publicKey),
@@ -88,18 +89,18 @@ describe("SOUNDWORK BID", async () => {
 	// });
 
 	// it("rejects bid!", async () => {
-	// 	let ix = await bidProgram.methods
-	// 		.rejectBid()
-	// 		.accounts({
-	// 			seller: signerOneKp.publicKey,
-	// 			listingData: listingDataAcc,
-	// 			buyer: signerTwoKp.publicKey,
-	// 			buyerSolEscrow: findUserEscrowWallet(signerTwoKp.publicKey),
-	// 			biddingDataAcc,
-	// 			soundworkList: listProgram.programId,
-	// 			systemProgram: anchor.web3.SystemProgram.programId,
-	// 		})
-	// 		.instruction();
+		// let ix = await bidProgram.methods
+		// 	.rejectBid()
+		// 	.accounts({
+		// 		seller: signerOneKp.publicKey,
+		// 		listingDataAcc,
+		// 		buyer: signerTwoKp.publicKey,
+		// 		buyerSolEscrow: findUserEscrowWallet(signerTwoKp.publicKey),
+		// 		biddingDataAcc,
+		// 		soundworkList: listProgram.programId,
+		// 		systemProgram: anchor.web3.SystemProgram.programId,
+		// 	})
+		// 	.instruction();
 
 	// 	let tx = new anchor.web3.Transaction().add(ix);
 
@@ -115,16 +116,16 @@ describe("SOUNDWORK BID", async () => {
 	// });
 
 	// it("deletes a bid!", async () => {
-	// 	let ix = await bidProgram.methods
-	// 		.deleteBid()
-	// 		.accounts({
-	// 			bidder: signerTwoKp.publicKey,
-	// 			biddingDataAcc,
-	// 			solEscrowWallet: findUserEscrowWallet(signerTwoKp.publicKey),
-	// 			soundworkList: listProgram.programId,
-	// 			systemProgram: anchor.web3.SystemProgram.programId,
-	// 		})
-	// 		.instruction();
+		// let ix = await bidProgram.methods
+		// 	.deleteBid()
+		// 	.accounts({
+		// 		bidder: signerTwoKp.publicKey,
+		// 		biddingDataAcc,
+		// 		solEscrowWallet: findUserEscrowWallet(signerTwoKp.publicKey),
+		// 		soundworkList: listProgram.programId,
+		// 		systemProgram: anchor.web3.SystemProgram.programId,
+		// 	})
+		// 	.instruction();
 
 	// 	let tx = new anchor.web3.Transaction().add(ix);
 

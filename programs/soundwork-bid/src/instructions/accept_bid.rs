@@ -13,20 +13,25 @@ use soundwork_list::{
     },
 };
 
+use crate::state::bid::BiddingDataV1;
+
 #[derive(Accounts)]
 pub struct AcceptBid<'info> {
     // he will pay for the tx when he accepts a bid
     #[account(
         mut,
-        address = listing_data.owner.key()
+        address = listing_data_acc.owner.key()
     )]
     pub seller: Signer<'info>,
+
+    #[account(mut)]
+    pub listing_data_acc: Account<'info, ListingDataV1>,
 
     #[account(
         mut,
         close = buyer
     )]
-    pub listing_data: Account<'info, ListingDataV1>,
+    pub bidding_data_acc: Account<'info, BiddingDataV1>,
 
     /// CHECK: checked when passing from PDA
     #[account(mut)]
@@ -35,14 +40,12 @@ pub struct AcceptBid<'info> {
     #[account(mut)]
     pub mint: Account<'info, Mint>,
 
-    // this will pay for the listing
-    // pass system program to not use as signer
     #[account(mut)]
     pub buyer_sol_escrow: Account<'info, SolEscrowWallet>,
 
     #[account(
         init_if_needed,
-        payer = seller, // ! check if this can be made to be the bidding wallet
+        payer = seller, 
         associated_token::authority = buyer,
         associated_token::mint = mint
     )]
@@ -61,7 +64,8 @@ pub struct AcceptBid<'info> {
 }
 
 pub fn accept_bid_handler(ctx: Context<AcceptBid>) -> Result<()> {
-    let listing_data = &ctx.accounts.listing_data;
+    let listing_data = &ctx.accounts.listing_data_acc;
+    let bidding_data = &ctx.accounts.bidding_data_acc;
 
     // todo(Jimii): Expiry
     // - time it expires
@@ -84,7 +88,7 @@ impl<'info> AcceptBid<'info> {
             vault_token_account: self.vault_token_acc.to_account_info(),
             buyer_token_account: self.buyer_token_acc.to_account_info(),
             mint: self.mint.to_account_info(),
-            listing_data: self.listing_data.to_account_info(),
+            listing_data: self.listing_data_acc.to_account_info(),
             token_program: self.token_program.to_account_info(),
             system_program: self.system_program.to_account_info(),
         };

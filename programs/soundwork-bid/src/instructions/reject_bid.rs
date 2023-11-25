@@ -14,12 +14,12 @@ pub struct RejectBid<'info> {
     // he will pay for the tx when he accepts a bid
     #[account(
         mut,
-        address = listing_data.owner.key() @ CustomError::UnrecognizedSigner
+        address = listing_data_acc.owner.key() @ CustomError::UnrecognizedSigner
     )]
     pub seller: Signer<'info>,
 
     #[account(mut)]
-    pub listing_data: Account<'info, ListingDataV1>,
+    pub listing_data_acc: Account<'info, ListingDataV1>,
 
     /// CHECK: checked when passing from PDA
     #[account(mut)]
