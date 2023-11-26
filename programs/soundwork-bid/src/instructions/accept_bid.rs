@@ -43,13 +43,9 @@ pub struct AcceptBid<'info> {
     #[account(mut)]
     pub buyer_sol_escrow: Account<'info, SolEscrowWallet>,
 
-    #[account(
-        init_if_needed,
-        payer = seller, 
-        associated_token::authority = buyer,
-        associated_token::mint = mint
-    )]
-    pub buyer_token_acc: Account<'info, TokenAccount>,
+    /// CHECK: initialized calling the buy listing CPI
+    #[account(mut)]
+    pub buyer_token_acc: AccountInfo<'info>,
 
     #[account(mut)]
     pub asset_manager: Account<'info, AssetManagerV1>,
@@ -90,6 +86,7 @@ impl<'info> AcceptBid<'info> {
             mint: self.mint.to_account_info(),
             listing_data: self.listing_data_acc.to_account_info(),
             token_program: self.token_program.to_account_info(),
+            associated_token_program: self.associated_token_program.to_account_info(),
             system_program: self.system_program.to_account_info(),
         };
 
