@@ -1,7 +1,7 @@
 // buy a listed NFT
 
 use anchor_lang::prelude::*;
-use anchor_spl::token::{ TokenAccount, Mint, Token };
+use anchor_spl::{ associated_token::AssociatedToken, token::{ TokenAccount, Mint, Token } };
 
 use crate::{
     state::listing::{ AssetManagerV1, ListingDataV1 },
@@ -14,14 +14,14 @@ pub struct BuyListing<'info> {
     // user buying the NFT
     #[account(
         mut, 
-        constraint = buyer.lamports() > listing_data.lamports @ CustomError::InsufficientFunds
+        // constraint = buyer.lamports() > listing_data.lamports @ CustomError::InsufficientFunds
     )]
     pub buyer: Signer<'info>,
 
     /// CHECK: program account
     #[account(
         mut, 
-        constraint = escrow_wallet_as_buyer.lamports() > listing_data.lamports @ CustomError::InsufficientFunds
+        // constraint = escrow_wallet_as_buyer.lamports() > listing_data.lamports @ CustomError::InsufficientFunds
     )]
     pub escrow_wallet_as_buyer: AccountInfo<'info>,
 
@@ -34,8 +34,13 @@ pub struct BuyListing<'info> {
 
     #[account(mut)]
     pub vault_token_account: Account<'info, TokenAccount>, // asset manager ATA that will hold all nfts
-    
-    #[account(mut)]
+
+    #[account(
+        init_if_needed,
+        payer = buyer,
+        associated_token::authority = buyer,
+        associated_token::mint = mint
+    )]
     pub buyer_token_account: Account<'info, TokenAccount>, // buyer ATA
 
     #[account(
@@ -48,6 +53,7 @@ pub struct BuyListing<'info> {
     pub listing_data: Account<'info, ListingDataV1>,
 
     pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
 
@@ -58,8 +64,8 @@ pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
     let asset_manager_signer = &[&asset_manager_seeds[..]];
 
     // todo(Jimii): protocol fees
-    // ! check if we want to use the user's escrow wallet as signer 
-    if ctx.accounts.escrow_wallet_as_buyer.owner ==  ctx.program_id {
+    // ! check if we want to use the user's escrow wallet as signer
+    if ctx.accounts.escrow_wallet_as_buyer.owner == ctx.program_id {
         ctx.accounts.escrow_wallet_as_buyer.sub_lamports(ctx.accounts.listing_data.lamports)?;
         ctx.accounts.og_owner.add_lamports(ctx.accounts.listing_data.lamports)?;
     } else {

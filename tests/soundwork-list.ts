@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { BN } from "bn.js";
 import {
     assetManager,
@@ -89,7 +89,7 @@ describe("SOUNDWORK LIST", async () => {
     // 		.buyListing()
     // 		.accounts({
     // 			buyer: signerTwoKp.publicKey, // ! change
-    //             escrowWalletAsBuyer: anchor.web3.SystemProgram.programId, 
+    //             escrowWalletAsBuyer: signerTwoKp.publicKey, 
     // 			ogOwner: signerOneKp.publicKey, // ! change
     // 			buyerTokenAccount: signerTwoATA, // ! change
     // 			mint: nftMint,
@@ -97,6 +97,7 @@ describe("SOUNDWORK LIST", async () => {
     // 			vaultTokenAccount,
     // 			listingData: listingDataAcc,
     // 			tokenProgram: TOKEN_PROGRAM_ID,
+    // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     // 			systemProgram: anchor.web3.SystemProgram.programId,
     // 		})
     // 		.instruction()
@@ -108,8 +109,8 @@ describe("SOUNDWORK LIST", async () => {
 
 
     // ------------------------------- ESCROW TESTS -----------------
-    
-    
+
+
     // it("deposits sol into escrow!", async () => {
     //     let tx = await listProgram.methods.depositSol(new BN(5 * anchor.web3.LAMPORTS_PER_SOL)).accounts({
     //         owner: signerOneKp.publicKey,
