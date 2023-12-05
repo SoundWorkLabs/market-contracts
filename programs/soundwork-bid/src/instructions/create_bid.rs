@@ -37,7 +37,7 @@ CreateBid<'info> {
     /// CHECK: initialized by list program through the CPI
     #[account(
         mut,
-        owner = soundwork_list.key()
+        //todo (JIMII): constraint to make sure this is the escrow
     )]
     pub sol_escrow_wallet: AccountInfo<'info>,
 

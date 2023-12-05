@@ -64,25 +64,25 @@ describe("SOUNDWORK LIST", async () => {
     //     );
     // });
 
-    it("delete listing!", async () => {
-        let tx = await listProgram.methods
-            .deleteListing()
-            .accounts({
-                authority: signerOneKp.publicKey,
-                authorityTokenAccount: signerOneATA,
-                mint: nftMint,
-                assetManager,
-                vaultTokenAccount,
-                listingData: listingDataAcc,
-                tokenProgram: TOKEN_PROGRAM_ID,
-                systemProgram: anchor.web3.SystemProgram.programId,
-            })
-            .rpc();
+    // it("delete listing!", async () => {
+    //     let tx = await listProgram.methods
+    //         .deleteListing()
+    //         .accounts({
+    //             authority: signerOneKp.publicKey,
+    //             authorityTokenAccount: signerOneATA,
+    //             mint: nftMint,
+    //             assetManager,
+    //             vaultTokenAccount,
+    //             listingData: listingDataAcc,
+    //             tokenProgram: TOKEN_PROGRAM_ID,
+    //             systemProgram: anchor.web3.SystemProgram.programId,
+    //         })
+    //         .rpc();
 
-        console.log(
-            `delete listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-        );
-    });
+    //     console.log(
+    //         `delete listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+    //     );
+    // });
 
     // it("buy listing!", async () => {
     // 	let tx = await listProgram.methods
