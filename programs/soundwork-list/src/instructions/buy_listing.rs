@@ -34,7 +34,7 @@ pub struct BuyListing<'info> {
 
     #[account(mut)]
     pub vault_token_account: Account<'info, TokenAccount>, // asset manager ATA that will hold all nfts
-
+    
     #[account(mut)]
     pub buyer_token_account: Account<'info, TokenAccount>, // buyer ATA
 
