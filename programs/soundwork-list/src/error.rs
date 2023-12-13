@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 #[error_code]
 pub enum CustomError {
-    #[msg("Signer address does not math the initializer address")]
+    #[msg("Signer address does not match the initializer address")]
     UnrecognizedSigner,
     #[msg("Insufficient funds to complete the transaction")]
     InsufficientFunds,
