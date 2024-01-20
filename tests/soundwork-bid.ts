@@ -55,14 +55,16 @@ describe("SOUNDWORK BID", async () => {
 	// });
 
 	// it("Edits a bid for an NFT!", async () => {
-		// let ix = await bidProgram.methods
-		// 	.editBid(null, new BN(2 * anchor.web3.LAMPORTS_PER_SOL))
-		// 	.accounts({
-		// 		bidder: signerTwoKp.publicKey,
-		// 		biddingDataAcc,
-		// 		systemProgram: anchor.web3.SystemProgram.programId,
-		// 	})
-		// 	.instruction();
+	// 	let ix = await bidProgram.methods
+	// 		.editBid(null, new BN(10 * anchor.web3.LAMPORTS_PER_SOL))
+	// 		.accounts({
+	// 			bidder: signerTwoKp.publicKey,
+	// 			biddingDataAcc,
+	// 			solEscrowWallet: findUserEscrowWallet(signerTwoKp.publicKey),
+	// 			soundworkList: listProgram.programId,
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.instruction();
 
 	// 	let tx = new anchor.web3.Transaction().add(ix);
 
@@ -97,15 +99,14 @@ describe("SOUNDWORK BID", async () => {
 	// 		})
 	// 		.instruction();
 
-		// let tx = new anchor.web3.Transaction().add(ix);
+	// 	let tx = new anchor.web3.Transaction().add(ix);
 
-		// let txHash = await anchor.web3.sendAndConfirmTransaction(
-		// 	connection,
-		// 	tx,
-		// 	[signerOneKp],
-		// 	{skipPreflight: true}
-		// );
-
+	// 	let txHash = await anchor.web3.sendAndConfirmTransaction(
+	// 		connection,
+	// 		tx,
+	// 		[signerOneKp],
+	// 		{ skipPreflight: true }
+	// 	);
 	// 	console.log(
 	// 		`accept bid tx: https://explorer.solana.com/tx/${txHash}?cluster=devnet`
 	// 	);

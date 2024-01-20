@@ -21,11 +21,11 @@ pub struct BuyListing<'info> {
 
     /// CHECK: program account
     #[account(mut)]
-    pub escrow_wallet_as_buyer: Option<AccountInfo<'info>>,
+    pub escrow_wallet_as_buyer: Option<UncheckedAccount<'info>>,
 
     /// CHECK: address of NFT lister initialized in listing data account
     #[account(mut, address = listing_data.owner.key())]
-    pub og_owner: AccountInfo<'info>,
+    pub og_owner: SystemAccount<'info>,
 
     #[account(mut)]
     pub asset_manager: Account<'info, AssetManagerV1>,
@@ -50,18 +50,23 @@ pub struct BuyListing<'info> {
     #[account(mut, close = og_owner)]
     pub listing_data: Account<'info, ListingDataV1>,
 
+    /// CHECK: only used when accept bid is called
+    #[account(mut)]
+    pub bid_data_acc: Option<UncheckedAccount<'info>>,
+
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
 
 pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
+    let bid_data_acc = ctx.accounts.bid_data_acc.as_ref();
+    let escrow_wallet = ctx.accounts.escrow_wallet_as_buyer.as_ref();
+
     // ! derive asset manager seeds
     let (_, bump) = Pubkey::find_program_address(&[b"soundwork".as_ref()], ctx.program_id);
     let asset_manager_seeds = &[b"soundwork".as_ref(), &[bump]];
     let asset_manager_signer = &[&asset_manager_seeds[..]];
-
-    let escrow_wallet = ctx.accounts.escrow_wallet_as_buyer.as_ref();
 
     // when escrow account if provided, buyer wants to pay using his escrow,
     // else buyer has to use his wallet
@@ -72,17 +77,19 @@ pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
             return Err(error!(CustomError::InsufficientFunds));
         }
 
+        // buying at bid price
         escrow_wallet
             .unwrap()
-            .sub_lamports(ctx.accounts.listing_data.lamports)?;
+            .sub_lamports(bid_data_acc.unwrap().lamports())?; //okay to unwrap here. 
         ctx.accounts
             .og_owner
-            .add_lamports(ctx.accounts.listing_data.lamports)?;
+            .add_lamports(bid_data_acc.unwrap().lamports())?; // okay to unwrap here
     } else {
         if ctx.accounts.buyer.lamports() < ctx.accounts.listing_data.lamports {
             return Err(error!(CustomError::InsufficientFunds));
         }
 
+        // buying at full price
         transfer_lamports(
             &ctx.accounts.buyer,
             &ctx.accounts.og_owner,

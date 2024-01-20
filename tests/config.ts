@@ -1,6 +1,6 @@
-import * as anchor from '@coral-xyz/anchor';
+import * as anchor from "@coral-xyz/anchor";
 import { Keypair, PublicKey } from "@solana/web3.js";
-import { homedir } from 'os';
+import { homedir } from "os";
 import { readFileSync } from "fs";
 import { Program, Wallet } from "@coral-xyz/anchor";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
@@ -9,91 +9,95 @@ import { SoundworkBid } from "../target/types/soundwork_bid";
 import { SoundworkList } from "../target/types/soundwork_list";
 
 export const authority = anchor.AnchorProvider.env().wallet as Wallet;
-export const connection = new anchor.web3.Connection(anchor.web3.clusterApiUrl("devnet"));
+export const connection = new anchor.web3.Connection(
+	anchor.web3.clusterApiUrl("devnet")
+);
 export const provider = new anchor.AnchorProvider(
-    connection,
-    authority,
-    anchor.AnchorProvider.defaultOptions()
+	connection,
+	authority,
+	anchor.AnchorProvider.defaultOptions()
 );
 
-const bidProgramId = new PublicKey("CVuoapcC1RG8y1m86eChkXmynPi4FaykDC8jM8soMZ4j");
+const bidProgramId = new PublicKey(
+	"CVuoapcC1RG8y1m86eChkXmynPi4FaykDC8jM8soMZ4j"
+);
 const bidProgramIdl = JSON.parse(
-    readFileSync(
-        "/home/jimii/Documents/crew/market-contracts/target/idl/soundwork_bid.json", "utf8"
-    )
+	readFileSync(
+		"/home/jimii/Documents/crew/market-contracts/target/idl/soundwork_bid.json",
+		"utf8"
+	)
 );
 export const bidProgram = new Program(
-    bidProgramIdl,
-    bidProgramId,
-    provider
-) as Program<SoundworkBid>
+	bidProgramIdl,
+	bidProgramId,
+	provider
+) as Program<SoundworkBid>;
 
-const listProgramId = new PublicKey("EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX");
+const listProgramId = new PublicKey(
+	"EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX"
+);
 const listProgramIdl = JSON.parse(
-    readFileSync(
-        "/home/jimii/Documents/crew/market-contracts/target/idl/soundwork_list.json", "utf8"
-    )
+	readFileSync(
+		"/home/jimii/Documents/crew/market-contracts/target/idl/soundwork_list.json",
+		"utf8"
+	)
 );
 export const listProgram = new Program(
-    listProgramIdl,
-    listProgramId,
-    provider
-) as Program<SoundworkList>
+	listProgramIdl,
+	listProgramId,
+	provider
+) as Program<SoundworkList>;
 
 const KEYPAIR_PATH_ONE = homedir() + "/.config/solana/id.json";
 export const signerOneKp = Keypair.fromSecretKey(
-    Buffer.from(JSON.parse(readFileSync(KEYPAIR_PATH_ONE, "utf-8")))
+	Buffer.from(JSON.parse(readFileSync(KEYPAIR_PATH_ONE, "utf-8")))
 );
 export const borrower = new Wallet(signerOneKp);
 
 const KEYPAIR_PATH_TWO = homedir() + "/.config/solana/id-new.json";
 export const signerTwoKp = Keypair.fromSecretKey(
-    Buffer.from(JSON.parse(readFileSync(KEYPAIR_PATH_TWO, "utf-8")))
+	Buffer.from(JSON.parse(readFileSync(KEYPAIR_PATH_TWO, "utf-8")))
 );
 
-// export const nftMint = new PublicKey("5sQTE5rmngYJzUBavyLcJadL2GYKftavE4bE96c8ZD44");
-// export const nftMint = new PublicKey("9Uf4cEXKbWQvBKjEv7dxWACs7pWkfbgPjr5LMp4x7yT7");
-// export const nftMint = new PublicKey("RQnttzTrNAwc97N6Kpokc9rwEqihKBd5bYq7SNE2Hc8");
-export const nftMint = new PublicKey("Ea7tcpxcX2dk5wQu4aQJShRdRe4xzfvKtGdv7PWNnsuY");
-// Ea7tcpxcX2dk5wQu4aQJShRdRe4xzfvKtGdv7PWNnsuY
+// export const nftMint = new PublicKey("");
 
 /// derive PDAs
-// ! list program 
+// ! list program
 export const [assetManager] = PublicKey.findProgramAddressSync(
-    [Buffer.from("soundwork")],
-    listProgram.programId
+	[Buffer.from("soundwork")],
+	listProgram.programId
 );
 export const [listingDataAcc] = PublicKey.findProgramAddressSync(
-    [nftMint.toBuffer(), Buffer.from("ryo")],
-    listProgram.programId
+	[nftMint.toBuffer(), Buffer.from("ryo")],
+	listProgram.programId
 );
 export function findUserEscrowWallet(user: PublicKey): PublicKey {
-    const [userEscrowWaller] = PublicKey.findProgramAddressSync(
-        [user.toBuffer(), Buffer.from("Hitori")],
-        listProgram.programId
-    )
-    return userEscrowWaller;
+	const [userEscrowWaller] = PublicKey.findProgramAddressSync(
+		[user.toBuffer(), Buffer.from("Hitori")],
+		listProgram.programId
+	);
+	return userEscrowWaller;
 }
 
 // ! bid program
 export const [biddingDataAcc] = PublicKey.findProgramAddressSync(
-    [nftMint.toBuffer(), Buffer.from("Ikuyo")],
-    bidProgramId
-)
-
+	[nftMint.toBuffer(), Buffer.from("Ikuyo")],
+	bidProgramId
+);
 
 // Associated Token Accounts
 export const signerOneATA = getAssociatedTokenAddressSync(
-    nftMint,
-    signerOneKp.publicKey
+	nftMint,
+	signerOneKp.publicKey
 );
 
 export const signerTwoATA = getAssociatedTokenAddressSync(
-    nftMint,
-    signerTwoKp.publicKey
+	nftMint,
+	signerTwoKp.publicKey
 );
 
-export const vaultTokenAccount = getAssociatedTokenAddressSync(nftMint, assetManager, true);
-
-
-
+export const vaultTokenAccount = getAssociatedTokenAddressSync(
+	nftMint,
+	assetManager,
+	true
+);

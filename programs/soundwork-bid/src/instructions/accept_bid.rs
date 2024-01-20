@@ -33,9 +33,8 @@ pub struct AcceptBid<'info> {
     )]
     pub bidding_data_acc: Account<'info, BiddingDataV1>,
 
-    /// CHECK: checked when passing from PDA
     #[account(mut)]
-    pub buyer: AccountInfo<'info>,
+    pub buyer: SystemAccount<'info>,
 
     #[account(mut)]
     pub mint: Account<'info, Mint>,
@@ -45,7 +44,7 @@ pub struct AcceptBid<'info> {
 
     /// CHECK: initialized calling the buy listing CPI
     #[account(mut)]
-    pub buyer_token_acc: AccountInfo<'info>,
+    pub buyer_token_acc: UncheckedAccount<'info>,
 
     #[account(mut)]
     pub asset_manager: Account<'info, AssetManagerV1>,
@@ -82,6 +81,7 @@ impl<'info> AcceptBid<'info> {
             buyer_token_account: self.buyer_token_acc.to_account_info(),
             mint: self.mint.to_account_info(),
             listing_data: self.listing_data_acc.to_account_info(),
+            bid_data_acc: self.bidding_data_acc.to_account_info().into(),
             token_program: self.token_program.to_account_info(),
             associated_token_program: self.associated_token_program.to_account_info(),
             system_program: self.system_program.to_account_info(),

@@ -18,8 +18,8 @@ pub mod soundwork_bid {
 
     pub fn edit_bid(
         ctx: Context<EditBid>,
-        new_lamports: Option<u64>,
         new_expires: Option<i64>,
+        new_lamports: Option<u64>,
     ) -> Result<()> {
         instructions::edit_bid_handler(ctx, new_expires, new_lamports)
     }
