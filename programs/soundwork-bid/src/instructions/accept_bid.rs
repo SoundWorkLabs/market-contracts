@@ -60,11 +60,7 @@ pub struct AcceptBid<'info> {
 }
 
 pub fn accept_bid_handler(ctx: Context<AcceptBid>) -> Result<()> {
-    let listing_data = &ctx.accounts.listing_data_acc;
-    let bidding_data = &ctx.accounts.bidding_data_acc;
-
     // todo(Jimii): Expiry
-    // - time it expires
 
     // transfer nft bidder and send fees to buyer
     soundwork_list::cpi::buy_listing(ctx.accounts.buy_listing_ctx())?;
@@ -77,8 +73,9 @@ impl<'info> AcceptBid<'info> {
     pub fn buy_listing_ctx(&self) -> CpiContext<'_, '_, '_, 'info, BuyListing<'info>> {
         let cpi_program = self.soundwork_list.to_account_info();
         let cpi_accounts = BuyListing {
-            buyer: self.seller.to_account_info(), // ! because he is paying for the tx
-            escrow_wallet_as_buyer: self.buyer_sol_escrow.to_account_info(),
+            payer: self.seller.to_account_info(), // ! because he is paying for thetx
+            buyer: self.buyer.to_account_info(),
+            escrow_wallet_as_buyer: self.buyer_sol_escrow.to_account_info().into(),
             og_owner: self.seller.to_account_info(),
             asset_manager: self.asset_manager.to_account_info(),
             vault_token_account: self.vault_token_acc.to_account_info(),

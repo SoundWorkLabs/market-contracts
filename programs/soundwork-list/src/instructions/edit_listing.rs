@@ -12,11 +12,12 @@ pub struct EditListing<'info> {
     pub authority: Signer<'info>,
 
     #[account(
-        mut,  
+        mut,
         token::mint = mint,
         token::authority = authority
     )]
     pub authority_token_account: Account<'info, TokenAccount>,
+
     #[account(mut)]
     pub mint: Account<'info, Mint>,
 
@@ -24,7 +25,7 @@ pub struct EditListing<'info> {
     pub asset_manager: Account<'info, AssetManagerV1>,
 
     #[account(
-        mut, 
+        mut,
         token::mint = mint,
         token::authority = asset_manager
     )]
@@ -41,6 +42,6 @@ pub fn edit_listing_handler(ctx: Context<EditListing>, lamports: u64) -> Result<
     // signer seeds
     let listing_data_acc = &mut ctx.accounts.listing_data;
     listing_data_acc.lamports = lamports;
-   
+
     Ok(())
 }
