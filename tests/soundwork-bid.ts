@@ -55,14 +55,14 @@ describe("SOUNDWORK BID", async () => {
 	// });
 
 	// it("Edits a bid for an NFT!", async () => {
-	// 	let ix = await bidProgram.methods
-	// 		.editBid(null, new BN(2 * anchor.web3.LAMPORTS_PER_SOL))
-	// 		.accounts({
-	// 			bidder: signerTwoKp.publicKey,
-	// 			biddingDataAcc,
-	// 			systemProgram: anchor.web3.SystemProgram.programId,
-	// 		})
-	// 		.instruction();
+		// let ix = await bidProgram.methods
+		// 	.editBid(null, new BN(2 * anchor.web3.LAMPORTS_PER_SOL))
+		// 	.accounts({
+		// 		bidder: signerTwoKp.publicKey,
+		// 		biddingDataAcc,
+		// 		systemProgram: anchor.web3.SystemProgram.programId,
+		// 	})
+		// 	.instruction();
 
 	// 	let tx = new anchor.web3.Transaction().add(ix);
 

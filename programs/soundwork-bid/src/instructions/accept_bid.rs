@@ -1,10 +1,16 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{ associated_token::AssociatedToken, token::{ Mint, Token, TokenAccount } };
+use anchor_spl::{
+    associated_token::AssociatedToken,
+    token::{Mint, Token, TokenAccount},
+};
 use soundwork_list::{
     self,
     cpi::accounts::BuyListing,
     program::SoundworkList,
-    state::{ listing::{ AssetManagerV1, ListingDataV1 }, sol_escrow::SolEscrowWallet },
+    state::{
+        listing::{AssetManagerV1, ListingDataV1},
+        sol_escrow::SolEscrowWallet,
+    },
 };
 
 use crate::state::bid::BiddingDataV1;

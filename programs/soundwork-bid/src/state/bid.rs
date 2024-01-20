@@ -14,7 +14,7 @@ impl BiddingDataV1 {
         Self {
             lamports,
             expires_ts,
-            owner
+            owner,
         }
     }
 }

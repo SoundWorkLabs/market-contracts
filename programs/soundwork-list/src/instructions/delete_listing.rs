@@ -12,7 +12,7 @@ pub struct DeleteListing<'info> {
     pub authority: Signer<'info>,
 
     #[account(
-        mut,  
+        mut,
         token::mint = mint,
         token::authority = authority
     )]
@@ -24,7 +24,7 @@ pub struct DeleteListing<'info> {
     pub asset_manager: Account<'info, AssetManagerV1>,
 
     #[account(
-        mut, 
+        mut,
         token::mint = mint,
         token::authority = asset_manager
     )]
@@ -52,7 +52,7 @@ pub fn delete_listing_handler(ctx: Context<DeleteListing>) -> Result<()> {
         asset_manager_signer,
     )?;
 
-    // todo (Jimi) remove delegation ?  
+    // todo (Jimi) remove delegation ?
 
     Ok(())
 }

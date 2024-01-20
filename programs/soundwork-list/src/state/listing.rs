@@ -23,6 +23,11 @@ impl ListingDataV1 {
     pub fn new(lamports: u64, owner: Pubkey, mint: Pubkey) -> Self {
         let created_ts = Clock::get().unwrap().unix_timestamp;
 
-        Self { lamports, owner, created_ts, mint }
+        Self {
+            lamports,
+            owner,
+            created_ts,
+            mint,
+        }
     }
 }
