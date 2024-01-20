@@ -10,4 +10,6 @@ pub enum CustomError {
     InvalidAuthority,
     #[msg("You have already listed this NFT. Consider editing the listing instead")]
     NFTAlreadyListed,
+    #[msg("operation caused an overflow")]
+    Overflow,
 }
