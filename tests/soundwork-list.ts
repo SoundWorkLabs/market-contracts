@@ -1,137 +1,154 @@
 import * as anchor from "@coral-xyz/anchor";
 import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+	ASSOCIATED_TOKEN_PROGRAM_ID,
+	TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 import { BN } from "bn.js";
 import {
-    assetManager,
-    biddingDataAcc,
-    bidProgram,
-    connection,
-    findUserEscrowWallet,
-    listingDataAcc,
-    listProgram,
-    nftMint,
-    signerOneATA,
-    signerOneKp,
-    signerTwoATA,
-    signerTwoKp,
-    vaultTokenAccount,
+	assetManager,
+	biddingDataAcc,
+	bidProgram,
+	connection,
+	findUserEscrowWallet,
+	listingDataAcc,
+	listProgram,
+	nftMint,
+	signerOneATA,
+	signerOneKp,
+	signerTwoATA,
+	signerTwoKp,
+	vaultTokenAccount,
 } from "./config";
 
 describe("SOUNDWORK LIST", async () => {
-    // Configure the client to use the local cluster.
-    anchor.setProvider(anchor.AnchorProvider.env());
+	// Configure the client to use the local cluster.
+	anchor.setProvider(anchor.AnchorProvider.env());
 
-    // it("create listing!", async () => {
-    //     let tx = await listProgram.methods
-    //         .listNft(new anchor.BN(1 * anchor.web3.LAMPORTS_PER_SOL))
-    //         .accounts({
-    //             authority: signerOneKp.publicKey,
-    //             authorityTokenAccount: signerOneATA,
-    //             mint: nftMint,
-    //             assetManager,
-    //             vaultTokenAccount,
-    //             listingData: listingDataAcc,
-    //             tokenProgram: TOKEN_PROGRAM_ID,
-    //             associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-    //             systemProgram: anchor.web3.SystemProgram.programId,
-    //         })
-    //     .rpc();
+	// it("create listing!", async () => {
+	// 	let tx = await listProgram.methods
+	// 		.listNft(new anchor.BN(1 * anchor.web3.LAMPORTS_PER_SOL))
+	// 		.accounts({
+	// 			authority: signerOneKp.publicKey,
+	// 			authorityTokenAccount: signerOneATA,
+	// 			mint: nftMint,
+	// 			assetManager,
+	// 			vaultTokenAccount,
+	// 			listingData: listingDataAcc,
+	// 			tokenProgram: TOKEN_PROGRAM_ID,
+	// 			associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.rpc();
 
-    //     console.log(
-    //         `list tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-    //     );
-    // });
+	// 	console.log(
+	// 		`list tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+	// 	);
+	// });
 
+	// it("edit listing!", async () => {
+	// 	let tx = await listProgram.methods
+	// 		.editListing(new anchor.BN(200 * anchor.web3.LAMPORTS_PER_SOL))
+	// 		.accounts({
+	// 			authority: signerOneKp.publicKey,
+	// 			authorityTokenAccount: signerOneATA,
+	// 			mint: nftMint,
+	// 			assetManager,
+	// 			vaultTokenAccount,
+	// 			listingData: listingDataAcc,
+	// 			tokenProgram: TOKEN_PROGRAM_ID,
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.rpc();
 
-    // it("edit listing!", async () => {
-    //     let tx = await listProgram.methods
-    //         .editListing(new anchor.BN(200 * anchor.web3.LAMPORTS_PER_SOL))
-    //         .accounts({
-    //             authority: signerOneKp.publicKey,
-    //             authorityTokenAccount: signerOneATA,
-    //             mint: nftMint,
-    //             assetManager,
-    //             vaultTokenAccount,
-    //             listingData: listingDataAcc,
-    //             tokenProgram: TOKEN_PROGRAM_ID,
-    //             systemProgram: anchor.web3.SystemProgram.programId,
-    //         })
-    //         .rpc();
+	// 	console.log(
+	// 		`edit listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+	// 	);
+	// });
 
-    //     console.log(
-    //         `edit listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-    //     );
-    // });
+	// it("delete listing!", async () => {
+	// 	let tx = await listProgram.methods
+	// 		.deleteListing()
+	// 		.accounts({
+	// 			authority: signerOneKp.publicKey,
+	// 			authorityTokenAccount: signerOneATA,
+	// 			mint: nftMint,
+	// 			assetManager,
+	// 			vaultTokenAccount,
+	// 			listingData: listingDataAcc,
+	// 			tokenProgram: TOKEN_PROGRAM_ID,
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.rpc();
 
-    // it("delete listing!", async () => {
-    //     let tx = await listProgram.methods
-    //         .deleteListing()
-    //         .accounts({
-    //             authority: signerOneKp.publicKey,
-    //             authorityTokenAccount: signerOneATA,
-    //             mint: nftMint,
-    //             assetManager,
-    //             vaultTokenAccount,
-    //             listingData: listingDataAcc,
-    //             tokenProgram: TOKEN_PROGRAM_ID,
-    //             systemProgram: anchor.web3.SystemProgram.programId,
-    //         })
-    //         .rpc();
+	// 	console.log(
+	// 		`delete listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+	// 	);
+	// });
 
-    //     console.log(
-    //         `delete listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-    //     );
-    // });
+	// it("buy listing!", async () => {
+	// 	let ix = await listProgram.methods
+	// 		.buyListing()
+	// 		.accounts({
+	// 			payer: signerTwoKp.publicKey,
+	// 			buyer: signerTwoKp.publicKey, // ! change
+	// 			escrowWalletAsBuyer: null,
+	// 			ogOwner: signerOneKp.publicKey, // ! change
+	// 			buyerTokenAccount: signerTwoATA, // ! change
+	// 			mint: nftMint,
+	// 			assetManager,
+	// 			vaultTokenAccount,
+	// 			listingData: listingDataAcc,
+	// 			tokenProgram: TOKEN_PROGRAM_ID,
+	// 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.instruction();
 
-    // it("buy listing!", async () => {
-    // 	let tx = await listProgram.methods
-    // 		.buyListing()
-    // 		.accounts({
-    // 			buyer: signerTwoKp.publicKey, // ! change
-    //             escrowWalletAsBuyer: signerTwoKp.publicKey, 
-    // 			ogOwner: signerOneKp.publicKey, // ! change
-    // 			buyerTokenAccount: signerTwoATA, // ! change
-    // 			mint: nftMint,
-    // 			assetManager,
-    // 			vaultTokenAccount,
-    // 			listingData: listingDataAcc,
-    // 			tokenProgram: TOKEN_PROGRAM_ID,
-    // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-    // 			systemProgram: anchor.web3.SystemProgram.programId,
-    // 		})
-    // 		.instruction()
+	// 	let tx = new anchor.web3.Transaction().add(ix);
 
-    // 	console.log(
-    // 		`buy listing tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-    // 	);
-    // });
+	// 	let txHash = await anchor.web3.sendAndConfirmTransaction(
+	// 		connection,
+	// 		tx,
+	// 		[signerTwoKp],
+	// 		{ skipPreflight: true }
+	// 	);
 
+	// 	console.log(
+	// 		`buy listing tx: https://explorer.solana.com/tx/${txHash}?cluster=devnet`
+	// 	);
+	// });
 
-    // ------------------------------- ESCROW TESTS -----------------
+	// ------------------------------- ESCROW TESTS -----------------
 
+	// it("deposits sol into escrow!", async () => {
+	// 	let tx = await listProgram.methods
+	// 		.depositSol(new BN(5 * anchor.web3.LAMPORTS_PER_SOL))
+	// 		.accounts({
+	// 			owner: signerOneKp.publicKey,
+	// 			solEscrowWallet: findUserEscrowWallet(signerOneKp.publicKey),
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.rpc();
 
-    // it("deposits sol into escrow!", async () => {
-    //     let tx = await listProgram.methods.depositSol(new BN(5 * anchor.web3.LAMPORTS_PER_SOL)).accounts({
-    //         owner: signerOneKp.publicKey,
-    //         solEscrowWallet: findUserEscrowWallet(signerOneKp.publicKey),
-    //         systemProgram: anchor.web3.SystemProgram.programId,
-    //     }).rpc();
+	// 	console.log(
+	// 		`deposit sol tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+	// 	);
+	// });
 
-    //     console.log(
-    //         `deposit sol tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-    //     );
-    // });
+	// it("withdraws sol from the escrow!", async () => {
+	// 	let tx = await listProgram.methods
+	// 		.withdrawSol(new BN(1 * anchor.web3.LAMPORTS_PER_SOL))
+	// 		.accounts({
+	// 			payer: signerOneKp.publicKey,
+	// 			authority: signerOneKp.publicKey,
+	// 			solEscrowWallet: findUserEscrowWallet(signerOneKp.publicKey),
+	// 			systemProgram: anchor.web3.SystemProgram.programId,
+	// 		})
+	// 		.rpc();
 
-    // it("withdraws sol from the escrow!", async () => {
-    //     let tx = await listProgram.methods.withdrawSol(new BN(1 * anchor.web3.LAMPORTS_PER_SOL)).accounts({
-    //         owner: signerOneKp.publicKey,
-    //         solEscrowWallet: findUserEscrowWallet(signerOneKp.publicKey),
-    //         systemProgram: anchor.web3.SystemProgram.programId,
-    //     }).rpc()
-
-    //     console.log(
-    //         `withdraw sol tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-    //     );
-    // });
+	// 	console.log(
+	// 		`withdraw sol tx: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+	// 	);
+	// });
 });

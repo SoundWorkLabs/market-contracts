@@ -3,9 +3,10 @@ import { Keypair, PublicKey } from "@solana/web3.js";
 import { homedir } from 'os';
 import { readFileSync } from "fs";
 import { Program, Wallet } from "@coral-xyz/anchor";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+
 import { SoundworkBid } from "../target/types/soundwork_bid";
 import { SoundworkList } from "../target/types/soundwork_list";
-import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 export const authority = anchor.AnchorProvider.env().wallet as Wallet;
 export const connection = new anchor.web3.Connection(anchor.web3.clusterApiUrl("devnet"));
@@ -52,7 +53,9 @@ export const signerTwoKp = Keypair.fromSecretKey(
 
 // export const nftMint = new PublicKey("5sQTE5rmngYJzUBavyLcJadL2GYKftavE4bE96c8ZD44");
 // export const nftMint = new PublicKey("9Uf4cEXKbWQvBKjEv7dxWACs7pWkfbgPjr5LMp4x7yT7");
-export const nftMint = new PublicKey("RQnttzTrNAwc97N6Kpokc9rwEqihKBd5bYq7SNE2Hc8");
+// export const nftMint = new PublicKey("RQnttzTrNAwc97N6Kpokc9rwEqihKBd5bYq7SNE2Hc8");
+export const nftMint = new PublicKey("Ea7tcpxcX2dk5wQu4aQJShRdRe4xzfvKtGdv7PWNnsuY");
+// Ea7tcpxcX2dk5wQu4aQJShRdRe4xzfvKtGdv7PWNnsuY
 
 /// derive PDAs
 // ! list program 

@@ -1,21 +1,16 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::Mint ;
+use anchor_spl::token::Mint;
 
 use crate::state::bid::BiddingDataV1;
 use soundwork_list::{
-    self,
-    cpi::accounts::DepositSol,
-    program::SoundworkList,
-    state::listing::ListingDataV1,
-    error::CustomError,
+    self, cpi::accounts::DepositSol, program::SoundworkList, state::listing::ListingDataV1,
 };
 
 #[derive(Accounts)]
-pub struct 
-CreateBid<'info> {
+pub struct CreateBid<'info> {
     #[account(
         mut,
-        constraint = bidder.lamports() > listing_data_acc.lamports @CustomError::InsufficientFunds 
+        // constraint = bidder.lamports() > listing_data_acc.lamports @CustomError::InsufficientFunds 
     )]
     pub bidder: Signer<'info>,
 
@@ -52,23 +47,20 @@ pub fn create_bid_handler(ctx: Context<CreateBid>, lamports: u64, expires_ts: i6
     **bidding_data_acc = BiddingDataV1::new(lamports, expires_ts, ctx.accounts.bidder.key());
 
     // todo (Jimii) : check the 1000 extra
-    soundwork_list::cpi::deposit_sol(
-        ctx.accounts.initialize_escrow_ctx(), ctx.accounts.listing_data_acc.lamports + 1000
-    )?;
+    soundwork_list::cpi::deposit_sol(ctx.accounts.initialize_escrow_ctx(), lamports + 1000)?;
 
     Ok(())
 }
 
-impl <'info> CreateBid <'info> {
-    pub fn initialize_escrow_ctx(&self) -> CpiContext<'_, '_, '_, 'info, DepositSol<'info>> { 
+impl<'info> CreateBid<'info> {
+    pub fn initialize_escrow_ctx(&self) -> CpiContext<'_, '_, '_, 'info, DepositSol<'info>> {
         let cpi_program = self.soundwork_list.to_account_info();
         let cpi_accounts = DepositSol {
             owner: self.bidder.to_account_info(),
             sol_escrow_wallet: self.sol_escrow_wallet.to_account_info(),
-            system_program: self.system_program.to_account_info()
+            system_program: self.system_program.to_account_info(),
         };
 
         CpiContext::new(cpi_program, cpi_accounts)
-
     }
 }

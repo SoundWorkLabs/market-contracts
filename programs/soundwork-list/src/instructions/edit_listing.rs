@@ -17,6 +17,7 @@ pub struct EditListing<'info> {
         token::authority = authority
     )]
     pub authority_token_account: Account<'info, TokenAccount>,
+    
     #[account(mut)]
     pub mint: Account<'info, Mint>,
 
