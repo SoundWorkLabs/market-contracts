@@ -7,7 +7,10 @@ use anchor_spl::{
 use crate::{
     error::CustomError,
     helpers::{transfer_lamports, transfer_nft},
-    state::listing::{AssetManagerV1, ListingDataV1},
+    state::{
+        listing::{AssetManagerV1, ListingDataV1},
+        sol_escrow::SolEscrowWallet,
+    },
 };
 
 #[derive(Accounts)]
@@ -21,7 +24,7 @@ pub struct BuyListing<'info> {
 
     /// CHECK: program account
     #[account(mut)]
-    pub escrow_wallet_as_buyer: Option<UncheckedAccount<'info>>,
+    pub escrow_wallet_as_buyer: Option<Account<'info, SolEscrowWallet>>,
 
     /// CHECK: address of NFT lister initialized in listing data account
     #[account(mut, address = listing_data.owner.key())]
@@ -50,17 +53,13 @@ pub struct BuyListing<'info> {
     #[account(mut, close = og_owner)]
     pub listing_data: Account<'info, ListingDataV1>,
 
-    /// CHECK: only used when accept bid is called
-    #[account(mut)]
-    pub bid_data_acc: Option<UncheckedAccount<'info>>,
-
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
 
-pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
-    let bid_data_acc = ctx.accounts.bid_data_acc.as_ref();
+// only used when cpi is made from bid program 
+pub fn buy_listing_handler(ctx: Context<BuyListing>, bid_amt: Option<u64>) -> Result<()> {
     let escrow_wallet = ctx.accounts.escrow_wallet_as_buyer.as_ref();
 
     // ! derive asset manager seeds
@@ -72,18 +71,13 @@ pub fn buy_listing_handler(ctx: Context<BuyListing>) -> Result<()> {
     // else buyer has to use his wallet
     // NOTE: we have lamports checks here instead of using constraints because of mutual exclusivity of the
     // escrow_wallet and buyer accounts.
-    if escrow_wallet.is_some() {
-        if escrow_wallet.unwrap().lamports() < ctx.accounts.listing_data.lamports {
+    if escrow_wallet.is_some() && bid_amt.is_some() {
+        if escrow_wallet.unwrap().get_lamports() < bid_amt.unwrap() {
             return Err(error!(CustomError::InsufficientFunds));
         }
 
-        // buying at bid price
-        escrow_wallet
-            .unwrap()
-            .sub_lamports(bid_data_acc.unwrap().lamports())?; //okay to unwrap here. 
-        ctx.accounts
-            .og_owner
-            .add_lamports(bid_data_acc.unwrap().lamports())?; // okay to unwrap here
+        escrow_wallet.unwrap().sub_lamports(bid_amt.unwrap())?; // okay to unwrap here.
+        ctx.accounts.og_owner.add_lamports(bid_amt.unwrap())?; // okay to unwrap here
     } else {
         if ctx.accounts.buyer.lamports() < ctx.accounts.listing_data.lamports {
             return Err(error!(CustomError::InsufficientFunds));

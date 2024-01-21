@@ -59,7 +59,11 @@ export const signerTwoKp = Keypair.fromSecretKey(
 	Buffer.from(JSON.parse(readFileSync(KEYPAIR_PATH_TWO, "utf-8")))
 );
 
-// export const nftMint = new PublicKey("");
+export const nftMint = new PublicKey(
+	"4KhcMPEvxqoW9J7fBbZn88Q5ksg9wsihjfoPnkZEJ5Vv"
+);
+
+// 
 
 /// derive PDAs
 // ! list program

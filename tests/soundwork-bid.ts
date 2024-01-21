@@ -27,7 +27,7 @@ describe("SOUNDWORK BID", async () => {
 	// it("Creates a bid for an NFT!", async () => {
 	// 	let ix = await bidProgram.methods
 	// 		.makeBid(
-	// 			new BN(1 * anchor.web3.LAMPORTS_PER_SOL),
+	// 			new BN(10 * anchor.web3.LAMPORTS_PER_SOL),
 	// 			new BN(expire_ts)
 	// 		)
 	// 		.accounts({
@@ -61,7 +61,7 @@ describe("SOUNDWORK BID", async () => {
 	// 			bidder: signerTwoKp.publicKey,
 	// 			biddingDataAcc,
 	// 			solEscrowWallet: findUserEscrowWallet(signerTwoKp.publicKey),
-	// 			soundworkList: listProgram.programId,
+	// soundworkList: listProgram.programId,
 	// 			systemProgram: anchor.web3.SystemProgram.programId,
 	// 		})
 	// 		.instruction();

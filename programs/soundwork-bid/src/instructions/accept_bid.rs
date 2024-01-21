@@ -59,10 +59,13 @@ pub struct AcceptBid<'info> {
 }
 
 pub fn accept_bid_handler(ctx: Context<AcceptBid>) -> Result<()> {
-    // todo(Jimii): Expiry
+    // todo(Jimii):
 
     // transfer nft bidder and send fees to buyer
-    soundwork_list::cpi::buy_listing(ctx.accounts.buy_listing_ctx())?;
+    soundwork_list::cpi::buy_listing(
+        ctx.accounts.buy_listing_ctx(),
+        Some(ctx.accounts.bidding_data_acc.lamports),
+    )?;
 
     Ok(())
 }
@@ -81,7 +84,6 @@ impl<'info> AcceptBid<'info> {
             buyer_token_account: self.buyer_token_acc.to_account_info(),
             mint: self.mint.to_account_info(),
             listing_data: self.listing_data_acc.to_account_info(),
-            bid_data_acc: self.bidding_data_acc.to_account_info().into(),
             token_program: self.token_program.to_account_info(),
             associated_token_program: self.associated_token_program.to_account_info(),
             system_program: self.system_program.to_account_info(),
