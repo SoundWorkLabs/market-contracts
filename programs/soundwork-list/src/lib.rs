@@ -33,8 +33,8 @@ pub mod soundwork_list {
 
     /// buy an NFT from soundwork
     /// transfer NFT to user if he has funds to purchase the NFT
-    pub fn buy_listing(ctx: Context<BuyListing>) -> Result<()> {
-        instructions::buy_listing_handler(ctx)
+    pub fn buy_listing(ctx: Context<BuyListing>, bid_amt: Option<u64>) -> Result<()> {
+        instructions::buy_listing_handler(ctx, bid_amt)
     }
 
     /// transfer lamports to the escrow wallet
