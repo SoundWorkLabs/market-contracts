@@ -63,8 +63,6 @@ export const nftMint = new PublicKey(
 	"4KhcMPEvxqoW9J7fBbZn88Q5ksg9wsihjfoPnkZEJ5Vv"
 );
 
-// 
-
 /// derive PDAs
 // ! list program
 export const [assetManager] = PublicKey.findProgramAddressSync(

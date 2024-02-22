@@ -6,6 +6,7 @@
     "dependencies": {
         "@coral-xyz/anchor": "^0.28.0",
         "@metaplex-foundation/mpl-token-metadata": "^3.1.0",
+        "@solana/spl-account-compression": "^0.2.0",
         "@solana/spl-token": "^0.3.8"
     },
     "devDependencies": {

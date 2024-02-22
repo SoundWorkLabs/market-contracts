@@ -1,4 +1,6 @@
 use anchor_lang::prelude::*;
+#[cfg(not(feature = "no-entrypoint"))]
+use solana_security_txt::security_txt;
 
 pub mod error;
 pub mod helpers;
@@ -24,7 +26,7 @@ pub mod soundwork_list {
 
     use super::*;
 
-    /// list an NFT on soundwork by moving NFT to our asset manager
+    /// list an SPL NFT on soundwork by moving NFT to our asset manager
     /// create an `listingData` account to hold price,
     pub fn list_nft(ctx: Context<CreateListing>, lamports: u64) -> Result<()> {
         CreateListing::create_listing(ctx, lamports)
@@ -55,5 +57,21 @@ pub mod soundwork_list {
     /// withdraw sol from the user escrow
     pub fn withdraw_sol(ctx: Context<WithdrawSol>, lamports: Option<u64>) -> Result<()> {
         instructions::withdraw_sol_handler(ctx, lamports)
+    }
+
+    /// list a compressed NFT
+    pub fn list_compressed(
+        ctx: Context<ListCompressed>,
+        params: ListCompressedParams,
+    ) -> Result<()> {
+        ListCompressed::list_compressed(ctx, params)
+    }
+
+    /// Delete compressed NFT listing
+    pub fn delist_compressed(
+        ctx: Context<DelistCompressed>,
+        params: DelistCompressedParams,
+    ) -> Result<()> {
+        DelistCompressed::delist_compressed(ctx, params)
     }
 }

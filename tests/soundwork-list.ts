@@ -25,6 +25,7 @@ describe("SOUNDWORK LIST", async () => {
 	// Configure the client to use the local cluster.
 	anchor.setProvider(anchor.AnchorProvider.env());
 
+	// // ------------------------------------------------------- SPL Token -----------------------------------------------
 	// it("create listing!", async () => {
 	// 	let tx = await listProgram.methods
 	// 		.listNft(new anchor.BN(1 * anchor.web3.LAMPORTS_PER_SOL))
@@ -118,6 +119,8 @@ describe("SOUNDWORK LIST", async () => {
 	// 		`buy listing tx: https://explorer.solana.com/tx/${txHash}?cluster=devnet`
 	// 	);
 	// });
+
+	// ------------------------------------------------------- COMPRESSED NFT -----------------------------------------------
 
 	// ------------------------------- ESCROW TESTS -----------------
 
