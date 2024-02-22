@@ -9,6 +9,16 @@ use instructions::*;
 
 declare_id!("EUmBNHvFqhkA6Uaqv6pDup5ESHKCqoAweQ4kzAMjNZhX");
 
+#[cfg(not(feature = "no-entrypoint"))]
+security_txt! {
+    name: "Soundwork List Program",
+    project_url: "https://soundwork.io",
+    contacts: "email:info@soundwork.io, twitter:@soundworkio",
+    policy: "https://github.com/SoundWorkLabs/market-contracts/blob/master/SECURITY.md",
+    preferred_languages: "en",
+    source_code: "https://github.com/SoundWorkLabs/market-contracts"
+}
+
 #[program]
 pub mod soundwork_list {
 

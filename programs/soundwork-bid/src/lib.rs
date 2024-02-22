@@ -7,6 +7,16 @@ use instructions::*;
 
 declare_id!("CVuoapcC1RG8y1m86eChkXmynPi4FaykDC8jM8soMZ4j");
 
+#[cfg(not(feature = "no-entrypoint"))]
+security_txt! {
+    name: "Soundwork Bid Program",
+    project_url: "https://soundwork.io",
+    contacts: "email:info@soundwork.io, twitter:@soundworkio",
+    policy: "https://github.com/SoundWorkLabs/market-contracts/blob/master/SECURITY.md",
+    preferred_languages: "en",
+    source_code: "https://github.com/SoundWorkLabs/market-contracts"
+}
+
 #[program]
 pub mod soundwork_bid {
     use super::*;
