@@ -27,18 +27,18 @@ pub mod soundwork_list {
     /// list an NFT on soundwork by moving NFT to our asset manager
     /// create an `listingData` account to hold price,
     pub fn list_nft(ctx: Context<CreateListing>, lamports: u64) -> Result<()> {
-        instructions::create_listing_handler(ctx, lamports)
+        CreateListing::create_listing(ctx, lamports)
     }
 
     /// edit listing, by updating the `listingData` account information
     pub fn edit_listing(ctx: Context<EditListing>, lamports: u64) -> Result<()> {
-        instructions::edit_listing_handler(ctx, lamports)
+        EditListing::edit_listing(ctx, lamports)
     }
 
     /// remove listing by closing the `listingData` account
     /// and transfer NFT from soundwork to user
     pub fn delete_listing(ctx: Context<DeleteListing>) -> Result<()> {
-        instructions::delete_listing_handler(ctx)
+        DeleteListing::delete_listing(ctx)
     }
 
     /// buy an NFT from soundwork
