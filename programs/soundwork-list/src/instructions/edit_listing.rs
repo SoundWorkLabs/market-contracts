@@ -2,13 +2,13 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
 use crate::{
-    // helpers::transfer_nft,
+    error::CustomError,
     state::listing::{AssetManagerV1, ListingDataV1},
 };
 
 #[derive(Accounts)]
 pub struct EditListing<'info> {
-    #[account(mut, address = listing_data.owner)]
+    #[account(mut, address = listing_data.owner @ CustomError::UnrecognizedSigner)]
     pub authority: Signer<'info>,
 
     #[account(
@@ -38,10 +38,17 @@ pub struct EditListing<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn edit_listing_handler(ctx: Context<EditListing>, lamports: u64) -> Result<()> {
-    // signer seeds
-    let listing_data_acc = &mut ctx.accounts.listing_data;
-    listing_data_acc.lamports = lamports;
+impl EditListing<'_> {
+    pub fn validate(&self) -> Result<()> {
+        Ok(())
+    }
 
-    Ok(())
+    /// Edits a listing
+    #[access_control(ctx.accounts.validate())]
+    pub fn edit_listing(ctx: Context<EditListing>, lamports: u64) -> Result<()> {
+        let listing_data_acc = &mut ctx.accounts.listing_data;
+        listing_data_acc.lamports = lamports;
+
+        Ok(())
+    }
 }

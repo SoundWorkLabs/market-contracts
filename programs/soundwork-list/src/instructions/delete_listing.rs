@@ -1,14 +1,14 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
+use anchor_spl::token::{self, Mint, Token, TokenAccount, TransferChecked};
 
 use crate::{
-    helpers::transfer_nft,
+    error::CustomError,
     state::listing::{AssetManagerV1, ListingDataV1},
 };
 
 #[derive(Accounts)]
 pub struct DeleteListing<'info> {
-    #[account(mut, address = listing_data.owner)]
+    #[account(mut, address = listing_data.owner @ CustomError::UnrecognizedSigner)]
     pub authority: Signer<'info>,
 
     #[account(
@@ -37,22 +37,32 @@ pub struct DeleteListing<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn delete_listing_handler(ctx: Context<DeleteListing>) -> Result<()> {
-    // signer seeds
-    let (_, bump) = Pubkey::find_program_address(&[b"soundwork".as_ref()], ctx.program_id);
-    let asset_manager_seeds = &[b"soundwork".as_ref(), &[bump]];
-    let asset_manager_signer = &[&asset_manager_seeds[..]];
+impl DeleteListing<'_> {
+    pub fn validate(&self) -> Result<()> {
+        return Ok(());
+    }
 
-    transfer_nft(
-        ctx.accounts.vault_token_account.to_account_info(),
-        ctx.accounts.authority_token_account.to_account_info(),
-        ctx.accounts.mint.clone(),
-        ctx.accounts.asset_manager.to_account_info(),
-        ctx.accounts.token_program.clone(),
-        asset_manager_signer,
-    )?;
+    /// Deletes a listing
+    #[access_control(ctx.accounts.validate())]
+    pub fn delete_listing(ctx: Context<DeleteListing>) -> Result<()> {
+        // signer seeds
+        let (_, bump) = Pubkey::find_program_address(&[b"soundwork".as_ref()], ctx.program_id);
+        let asset_manager_seeds = &[b"soundwork".as_ref(), &[bump]];
+        let asset_manager_signer = &[&asset_manager_seeds[..]];
 
-    // todo (Jimi) remove delegation ?
+        let cpi_accounts = TransferChecked {
+            from: ctx.accounts.vault_token_account.to_account_info(),
+            mint: ctx.accounts.mint.to_account_info(),
+            to: ctx.accounts.authority_token_account.to_account_info(),
+            authority: ctx.accounts.asset_manager.to_account_info(),
+        };
 
-    Ok(())
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_context: CpiContext<'_, '_, '_, '_, TransferChecked<'_>> =
+            CpiContext::new(cpi_program, cpi_accounts).with_signer(asset_manager_signer);
+
+        token::transfer_checked(cpi_context, 1, 0)?;
+
+        Ok(())
+    }
 }
