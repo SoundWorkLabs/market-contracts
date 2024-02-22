@@ -1,4 +1,6 @@
 use anchor_lang::prelude::*;
+#[cfg(not(feature = "no-entrypoint"))]
+use solana_security_txt::security_txt;
 
 pub mod instructions;
 pub mod state;

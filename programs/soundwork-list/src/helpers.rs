@@ -1,32 +1,35 @@
 use anchor_lang::{
     prelude::{Account, AccountInfo, CpiContext, Program, Result},
+    solana_program::pubkey::Pubkey,
     system_program::{self, System, Transfer as SolanaTransfer},
     ToAccountInfo,
 };
-use anchor_spl::token::{
-    self, ApproveChecked, Mint, Token, TransferChecked as TokenTransferChecked,
-};
+use anchor_spl::token::{self, Mint, Token, TransferChecked as TokenTransferChecked};
 
-/// delegate authority over NFT to asset manager
-pub fn delegate_nft<'a>(
-    authority: AccountInfo<'a>,
-    delegate: AccountInfo<'a>,
-    to: AccountInfo<'a>,
-    mint: Account<'a, Mint>,
-    token_program: Program<'a, Token>,
-) -> Result<()> {
-    let cpi_accounts = ApproveChecked {
-        to,
-        mint: mint.to_account_info(),
-        delegate,
-        authority,
-    };
-    let cpi_program = token_program.to_account_info();
-    let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
+#[derive(Clone)]
+pub struct MplBubblegum;
 
-    token::approve_checked(cpi_context, 1, 0)?;
+impl anchor_lang::Id for MplBubblegum {
+    fn id() -> Pubkey {
+        mpl_bubblegum::ID
+    }
+}
 
-    Ok(())
+#[derive(Clone)]
+pub struct Noop;
+
+impl anchor_lang::Id for Noop {
+    fn id() -> Pubkey {
+        mpl_bubblegum::programs::SPL_NOOP_ID
+    }
+}
+
+pub struct SplAccountCompression;
+
+impl anchor_lang::Id for SplAccountCompression {
+    fn id() -> Pubkey {
+        mpl_bubblegum::programs::SPL_ACCOUNT_COMPRESSION_ID
+    }
 }
 
 // todo (Jimii) use references for the accounts
